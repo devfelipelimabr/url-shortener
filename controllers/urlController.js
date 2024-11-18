@@ -31,3 +31,24 @@ export const redirectURL = async (req, res) => {
         res.status(500).json({ error: 'Erro ao redirecionar a URL' });
     }
 };
+
+// Função para obter estatísticas de uma URL encurtada
+export const getStats = async (req, res) => {
+    const { shortURL } = req.params;
+
+    try {
+        const url = await URL.findOne({ shortURL });
+        if (url) {
+            res.status(200).json({
+                originalURL: url.originalURL,
+                shortURL: url.shortURL,
+                clicks: url.clicks,
+                createdAt: url.createdAt
+            });
+        } else {
+            res.status(404).json({ error: 'URL não encontrada' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar estatísticas da URL' });
+    }
+};
